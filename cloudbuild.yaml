@@ -1,0 +1,13 @@
+steps:
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest', '.']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest']
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', 'ins-run', '--image', 'gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest', '--region', 'asia-south1']
+images:
+- gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest
