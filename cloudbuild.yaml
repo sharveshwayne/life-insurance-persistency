@@ -11,3 +11,5 @@ steps:
   args: ['run', 'deploy', 'ins-run', '--image', 'gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest', '--region', 'asia-south1']
 images:
 - gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest
+options:
+  logging: CLOUD_LOGGING_ONLY
