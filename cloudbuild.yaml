@@ -8,7 +8,7 @@ steps:
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', 'ins-run', '--image', 'gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest', '--region', 'asia-south1', '--port', '8501', '--allow-unauthenticated']
+  args: ['run', 'deploy', 'ins-run', '--image', 'gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest', '--region', 'asia-south1', '--port', '8501','--memory', '1024Mi' ,'--allow-unauthenticated']
 images:
 - gcr.io/int-mlops-dna-1122/insurance-persistency-image:latest
 options:
