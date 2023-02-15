@@ -22,3 +22,14 @@ FEATURES : ['owner_age', 'owner_gender', 'marital_status', 'num_nominee', 'smoke
        'prev_persistency', 'num_complaints', 'target_completion_perc',
        'has_contacted_in_last_6_months', 'credit_score',
        'time_to_issue', 'prem_to_income_ratio']
+COLUMN_MAPPING : {'Education':'education', 'Occupation':'occupation','Smoker':'smoker',
+                  'Marital Status':'marital_status', 'Gender':'owner_gender', 'Experience':'experience', 
+                  'Income':'income', 'Age':'owner_age','Lapse':'lapse',
+                  'Credit Score':'credit_score','Policy Term':'policy_term','Payment Frequency':'payment_freq', 
+                  'Annual Premium':'annual_premium', 'Sum Insured':'sum_insured','Agent Age':'agent_age', 
+                  'Agent Tenure (days)':'agent_tenure_days', 'Persistency':'agent_persistency', 'Last 6 months policies':'last_6_month_submissions', 
+                  'Average Premium':'average_premium','Is Reinstated?':'is_reinstated', 'Persistency before Reinstated':'prev_persistency', 
+                  'Number Complaints':'num_complaints', 'Agent Status':'agent_status', 'Agent Education':'agent_education', 
+                  'Target Completion Percentage':'target_completion_perc','Number of Nominees':'num_nominee','Underwent Medical Test?': 'medical', 
+                  'Number of Family Members': 'family_member', 'Number Existing Policies': 'existing_num_policy', 
+                  'Has Critical Health History?' : 'has_critical_health_history'}

@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import shap
 from datetime import datetime as dt
 import yaml
+import plotly.express as px
 
 
 IMAGE_NAME = "online_pred_" + str(dt.today().date()) + ".jpg"
@@ -161,3 +162,76 @@ def create_save_shap_plot(explainer, plot_df, path, image_name):
 
     plt.tight_layout()
     explainer_img.savefig(os.path.join(path, image_name))
+
+
+def plot_map(df, col, color_scale="viridis_r"):
+    fig = px.choropleth(
+        df,
+        locations="state",
+        locationmode="USA-states",
+        color=col,
+        color_continuous_scale=color_scale,
+        scope="usa",
+    )
+
+    fig.add_scattergeo(
+        locations=df["state"], locationmode="USA-states", text=df["state"], mode="text"
+    )
+    return fig
+
+
+def descriptive_polts(
+    df, x_axis, group_var, column_mapping_dict=config["COLUMN_MAPPING"]
+):
+    x_axis = column_mapping_dict[x_axis]
+    group_var = column_mapping_dict[group_var]
+
+    IS_X_VAR_CAT = df[x_axis].dtype == "object" or (df[x_axis].nunique() < 20)
+    IS_GRP_VAR_CAT = df[group_var].dtype == "object" or (df[group_var].nunique() < 20)
+
+    if IS_X_VAR_CAT and IS_GRP_VAR_CAT:
+        fig = px.histogram(
+            df,
+            x=x_axis,
+            color=group_var,
+            labels={value: key for key, value in column_mapping_dict.items()},
+        )
+        #    category_orders={"education":['Lt High School', 'High School', 'Some College', 'Graduate', 'Post Graduate', 'Others']})
+        fig.update_xaxes(type="category", categoryorder="category ascending")
+        return fig
+
+    elif not IS_X_VAR_CAT and IS_GRP_VAR_CAT:
+        fig = px.box(df, x=x_axis, color=group_var)
+        fig.update_xaxes(categoryorder="category ascending")
+        return fig
+
+    elif not IS_X_VAR_CAT and not IS_GRP_VAR_CAT:
+        fig = px.scatter(df, x=x_axis, y=group_var)
+        return fig
+
+    else:
+        return None
+
+
+def load_df_for_plots(
+    path=os.path.join(config["LOOKUP_TABLE_PATH"], "master_data.csv")
+):
+    INDEX = "policy_number"
+    DATE_COLS = [
+        "proposal_received_date",
+        "policy_issue_date",
+        "agent_dob",
+        "agent_doj",
+    ]
+    NA_VALUES = ["", "NA", "N/A", "NULL", "null", "?", "*", "#N/A", "#VALUE!", "   "]
+    DTYPE_DICT = {"zipcode": "str", "agent_code": "str"}
+    df = pd.read_csv(
+        path,
+        index_col=INDEX,
+        na_values=NA_VALUES,
+        parse_dates=DATE_COLS,
+        dayfirst=True,
+        dtype=DTYPE_DICT,
+    )
+
+    return df
