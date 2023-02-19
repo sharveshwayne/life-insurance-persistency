@@ -77,13 +77,13 @@ def create_features(df) -> pd.DataFrame:
 
 
 def clean_data_online(df) -> pd.DataFrame:
-    df = df.drop(config["COLS_TO_REM_ONLINE"], axis=1)
+    df = df[config["FEATURES"]]
 
     return df
 
 
 def clean_data_batch(df) -> pd.DataFrame:
-    df = df.drop(config["COLS_TO_REM_BATCH"], axis=1)
+    df = df[config["FEATURES"] + ["customer_id"]]
 
     return df
 
@@ -116,15 +116,9 @@ def create_final_input_online(preproc_df):
     return model_clean_df
 
 
-def create_final_input_batch(policy_df, policy_tbl):
-    policy_tbl = load_policy_lookup_table()
-
-    model_merge_df1 = policy_df.merge(
-        policy_tbl, how="inner", left_on="policy_number", right_on="policy_number"
-    ).set_index("policy_number")
-
-    model_merge_df2 = create_features(model_merge_df1)
-    model_clean_df = clean_data_batch(model_merge_df2)
+def create_final_input_batch(df):
+    model_merge_df = create_features(df)
+    model_clean_df = clean_data_batch(model_merge_df)
 
     return model_clean_df
 
@@ -147,7 +141,7 @@ def create_image_df(model_input_pipe, model_input):
     return plot_df
 
 
-def create_save_shap_plot(explainer, plot_df, path, image_name):
+def create_shap_plot(explainer, plot_df, path=None, image_name=None):
     shap_values = explainer.shap_values(plot_df)
     expected_value = explainer.expected_value
 
@@ -160,8 +154,9 @@ def create_save_shap_plot(explainer, plot_df, path, image_name):
         show=False,
     )
 
-    plt.tight_layout()
-    explainer_img.savefig(os.path.join(path, image_name))
+    # plt.tight_layout()
+    # explainer_img.savefig(os.path.join(path, image_name))
+    return explainer_img
 
 
 def plot_map(df, col, color_scale="viridis_r"):

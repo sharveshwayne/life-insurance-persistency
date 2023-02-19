@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-from PIL import Image
 import numpy as np
 from utils import (
     load_model,
@@ -8,11 +7,9 @@ from utils import (
     get_key,
     load_train_data_attribs,
     create_image_df,
-    create_save_shap_plot,
+    create_shap_plot,
     get_value,
 )
-from utils import IMAGE_NAME, config
-import os
 
 st.subheader("Prediction Service for a Single Customer")
 
@@ -287,16 +284,20 @@ with online_button_col2:
 
             plot_df = create_image_df(model_input_pipe, model_input)
 
-            create_save_shap_plot(
+            fig = create_shap_plot(
                 explainer,
                 plot_df,
-                path=config["IMAGE_PATH"],
-                image_name=IMAGE_NAME,
+                # path=config["IMAGE_PATH"],
+                # image_name=IMAGE_NAME,
+            )
+            st.pyplot(fig)
+            st.caption(
+                "Shapley Waterfall chart for the customer explaining the factors impacting the decision"
             )
 
-            image = Image.open(os.path.join(config["IMAGE_PATH"], IMAGE_NAME))
-            st.image(
-                image,
-                caption="Shapley Waterfall chart for the customer explaining the factors impacting the decision",
-                use_column_width=False,
-            )
+            # image = Image.open(os.path.join(config["IMAGE_PATH"], IMAGE_NAME))
+            # st.image(
+            #     image,
+            #     caption="Shapley Waterfall chart for the customer explaining the factors impacting the decision",
+            #     use_column_width=False,
+            # )
